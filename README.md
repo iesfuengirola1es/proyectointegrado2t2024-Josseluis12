@@ -55,6 +55,13 @@ El sistema estará compuesto por dos componentes principales: el servidor y el c
 6. Implementación de funcionalidades adicionales y pruebas de aceptación.
 7. Documentación y preparación para la presentación del proyecto.
 
-## Conclusiones
+## Mockup yWireframe
+- Pantalla inical de registro e inicio de sesion
+  ![image](https://github.com/iesfuengirola1es/proyectointegrado2t2024-Josseluis12/assets/145585591/27c08b01-3b61-45d1-89de-54f6d3a9c5e3)
+  ![image](https://github.com/iesfuengirola1es/proyectointegrado2t2024-Josseluis12/assets/145585591/e2d2e822-4680-4304-9644-669c067abb49)
 
-El proyecto "Damchat" tiene como objetivo proporcionar una plataforma de comunicación eficiente y versátil para usuarios de diferentes plataformas. A través de un enfoque iterativo y colaborativo, se espera lograr los objetivos planteados y ofrecer una aplicación robusta y fácil de usar. El éxito del proyecto se medirá por la satisfacción de los usuarios y la capacidad de la aplicación para adaptarse a sus necesidades en constante evolución.
+
+- Pantalla Principal del chat
+  ![image](https://github.com/iesfuengirola1es/proyectointegrado2t2024-Josseluis12/assets/145585591/8491b3d1-6ae9-4dba-8ac7-f6da59cd3b91)
+
+
