@@ -65,3 +65,43 @@ El sistema estará compuesto por dos componentes principales: el servidor y el c
   ![image](https://github.com/iesfuengirola1es/proyectointegrado2t2024-Josseluis12/assets/145585591/8491b3d1-6ae9-4dba-8ac7-f6da59cd3b91)
 
 
+# Damchat - Base de Datos
+
+## Entidades y Atributos
+
+### 1. Usuario
+| Atributo        | Tipo de Dato  | Clave |
+|-----------------|---------------|-------|
+| id_usuario      | INT           | PK    |
+| nombre_usuario  | VARCHAR(255)  |       |
+| contraseña      | VARCHAR(255)  |       |
+| email           | VARCHAR(255)  |       |
+| fecha_creacion  | DATETIME      |       |
+
+### 2. Conversación
+| Atributo        | Tipo de Dato  | Clave |
+|-----------------|---------------|-------|
+| id_conversacion | INT           | PK    |
+| titulo          | VARCHAR(255)  |       |
+
+### 3. Mensaje
+| Atributo        | Tipo de Dato  | Clave | Relación           |
+|-----------------|---------------|-------|--------------------|
+| id_mensaje      | INT           | PK    |                    |
+| id_conversacion | INT           | FK    | Pertenece a Conversación |
+| id_usuario      | INT           | FK    | Envía Usuario      |
+| mensaje         | TEXT          |       |                    |
+| fecha_hora      | DATETIME      |       |                    |
+
+### 4. Participante
+| Atributo        | Tipo de Dato  | Clave | Relación           |
+|-----------------|---------------|-------|--------------------|
+| id_usuario      | INT           | FK    | Participa en Usuario |
+| id_conversacion | INT           | FK    | Participa en Conversación |
+
+## Relaciones
+- **Envía**: Un `Usuario` puede enviar muchos `Mensajes`, pero un `Mensaje` es enviado por un solo `Usuario`.
+- **Pertenece a**: Un `Mensaje` pertenece a una `Conversación`.
+- **Participa en**: Un `Usuario` puede participar en muchas `Conversaciones` y una `Conversación` puede tener muchos `Usuarios` participantes.
+
+
