@@ -1,54 +1,61 @@
 package com.raven.service;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
+import okhttp3.*;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class TranslationService {
 
-    private static final String SERVER_URL = "http://localhost:5000/corregir_y_traducir"; // URL de tu API local
+    public interface TranslationCallback {
+        void onSuccess(String translatedMessage);
+        void onFailure(Exception e);
+    }
 
-    public static String[] corregirYTraducir(String textoOriginal, String idiomaDestino) throws IOException {
-        URL url = new URL(SERVER_URL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private final OkHttpClient client;
+    private static final String API_URL = "http://127.0.0.1:5000/corregir_y_traducir";
 
-        // Configuración de la conexión
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setDoOutput(true);
+    public TranslationService() {
+        client = new OkHttpClient();
+    }
 
-        // Creación del cuerpo JSON de la solicitud
-        String jsonInputString = "{\"texto_original\": \"" + textoOriginal + "\", \"idioma_destino\": \"" + idiomaDestino + "\"}";
+    public void translateMessage(String message, String targetLanguage, TranslationCallback callback) {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        String json = "{\"texto_original\":\"" + message + "\", \"idioma_destino\":\"" + targetLanguage + "\"}";
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .post(body)
+                .build();
 
-        // Envío de la solicitud
-        try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
-            outputStream.writeBytes(jsonInputString);
-            outputStream.flush();
-        }
+        System.out.println("Sending request to translation API: " + json); // Debug message
 
-        // Lectura de la respuesta
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Translation API call failed: " + e.getMessage()); // Debug message
+                callback.onFailure(e);
             }
-        }
 
-        // Parseo de la respuesta JSON
-        String textoCorregido = null;
-        String textoTraducido = null;
-        if (response.length() > 0) {
-            String jsonResponse = response.toString();
-            textoCorregido = jsonResponse.split("\"texto_corregido\":")[1].split(",")[0].trim();
-            textoTraducido = jsonResponse.split("\"texto_traducido\":")[1].split("}")[0].trim();
-            textoCorregido = textoCorregido.substring(1, textoCorregido.length() - 1); // Eliminar comillas dobles
-            textoTraducido = textoTraducido.substring(1, textoTraducido.length() - 1); // Eliminar comillas dobles
-        }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    System.out.println("Translation API call unsuccessful: " + response); // Debug message
+                    callback.onFailure(new IOException("Unexpected code " + response));
+                    return;
+                }
 
-        return new String[]{textoCorregido, textoTraducido};
+                String responseData = response.body().string();
+                System.out.println("Received response from translation API: " + responseData); // Debug message
+                String translatedMessage = extractTranslatedText(responseData);
+                callback.onSuccess(translatedMessage);
+            }
+        });
+    }
+
+    private String extractTranslatedText(String responseData) {
+        // Parsear el JSON manualmente o usar una librería como Jackson o Gson
+        int startIndex = responseData.indexOf("\"texto_traducido\":\"") + 19;
+        int endIndex = responseData.indexOf("\"", startIndex);
+        return responseData.substring(startIndex, endIndex);
     }
 }

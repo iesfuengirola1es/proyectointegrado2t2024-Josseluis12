@@ -2,6 +2,9 @@
   <library name="chart-application">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/chart-application/dist/chart-application.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../httpclient-4.5.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../okhttp-3.14.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../gson-2.8.8.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
