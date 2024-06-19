@@ -6,6 +6,12 @@ import org.json.JSONObject;
 
 public class Model_Receive_Message {
 
+    private MessageType messageType;
+    private int fromUserID;
+    private String text;
+    private Model_Receive_Image dataImage;
+    private Model_File_Sender file; // Añadido para los mensajes de archivo
+
     public MessageType getMessageType() {
         return messageType;
     }
@@ -38,6 +44,14 @@ public class Model_Receive_Message {
         this.dataImage = dataImage;
     }
 
+    public Model_File_Sender getFile() { // Añadido para obtener el archivo
+        return file;
+    }
+
+    public void setFile(Model_File_Sender file) { // Añadido para establecer el archivo
+        this.file = file;
+    }
+
     public Model_Receive_Message(Object json) {
         JSONObject obj = (JSONObject) json;
         try {
@@ -45,17 +59,15 @@ public class Model_Receive_Message {
             fromUserID = obj.getInt("fromUserID");
             text = obj.getString("text");
             if (!obj.isNull("dataImage")) {
-                dataImage = new Model_Receive_Image(obj.get("dataImage"));
+                dataImage = new Model_Receive_Image(obj.getJSONObject("dataImage"));
+            }
+            if (!obj.isNull("file")) { // Añadido para los mensajes de archivo
+                file = new Model_File_Sender(obj.getJSONObject("file"));
             }
         } catch (JSONException e) {
             System.err.println(e);
         }
     }
-
-    private MessageType messageType;
-    private int fromUserID;
-    private String text;
-    private Model_Receive_Image dataImage;
 
     public JSONObject toJsonObject() {
         try {
@@ -65,6 +77,9 @@ public class Model_Receive_Message {
             json.put("text", text);
             if (dataImage != null) {
                 json.put("dataImage", dataImage.toJsonObject());
+            }
+            if (file != null) { // Añadido para los mensajes de archivo
+                json.put("file", file.toJsonObject());
             }
             return json;
         } catch (JSONException e) {

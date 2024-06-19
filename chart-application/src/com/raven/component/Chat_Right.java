@@ -2,6 +2,8 @@ package com.raven.component;
 
 import com.raven.model.Model_File_Sender;
 import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.Icon;
 
 public class Chat_Right extends javax.swing.JLayeredPane {
@@ -38,7 +40,9 @@ public class Chat_Right extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        String formattedTime = dateFormat.format(new Date());
+        txt.setTime(formattedTime);
     }
 
     @SuppressWarnings("unchecked")

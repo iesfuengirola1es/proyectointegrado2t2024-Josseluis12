@@ -4,12 +4,28 @@ import com.raven.event.EventFileReceiver;
 import com.raven.service.Service;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import org.json.JSONException;
 
 public class Model_File_Receiver {
+
+    private int fileID;
+    private File file;
+    private long fileSize;
+    private String fileExtension;
+    private RandomAccessFile accFile;
+    private Socket socket;
+    private EventFileReceiver event;
+    private final String PATH_FILE = "client_data/";
+
+    public Model_File_Receiver(int fileID, Socket socket, EventFileReceiver event) {
+        this.fileID = fileID;
+        this.socket = socket;
+        this.event = event;
+    }
 
     public int getFileID() {
         return fileID;
@@ -35,12 +51,12 @@ public class Model_File_Receiver {
         this.fileSize = fileSize;
     }
 
-    public String getFileExtention() {
-        return fileExtention;
+    public String getFileExtension() {
+        return fileExtension;
     }
 
-    public void setFileExtention(String fileExtention) {
-        this.fileExtention = fileExtention;
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
     }
 
     public RandomAccessFile getAccFile() {
@@ -67,36 +83,17 @@ public class Model_File_Receiver {
         this.event = event;
     }
 
-    public Model_File_Receiver(int fileID, Socket socket, EventFileReceiver event) {
-        this.fileID = fileID;
-        this.socket = socket;
-        this.event = event;
-    }
-
-    public Model_File_Receiver() {
-    }
-
-    private int fileID;
-    private File file;
-    private long fileSize;
-    private String fileExtention;
-    private RandomAccessFile accFile;
-    private Socket socket;
-    private EventFileReceiver event;
-    private final String PATH_FILE = "client_data/";
-
     public void initReceive() {
         socket.emit("get_file", fileID, new Ack() {
             @Override
             public void call(Object... os) {
                 if (os.length > 0) {
                     try {
-                        fileExtention = os[0].toString();
+                        fileExtension = os[0].toString();
                         fileSize = (int) os[1];
-                        file = new File(PATH_FILE + fileID + fileExtention);
+                        file = new File(PATH_FILE + fileID + fileExtension);
                         accFile = new RandomAccessFile(file, "rw");
                         event.onStartReceiving();
-                        //  start save file
                         startSaveFile();
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
@@ -119,8 +116,7 @@ public class Model_File_Receiver {
                         startSaveFile();
                     } else {
                         close();
-                        event.onFinish(new File(PATH_FILE + fileID + fileExtention));
-                        //  remove list
+                        event.onFinish(new File(PATH_FILE + fileID + fileExtension));
                         Service.getInstance().fileReceiveFinish(Model_File_Receiver.this);
                     }
                 } catch (IOException | JSONException e) {
@@ -137,10 +133,8 @@ public class Model_File_Receiver {
     }
 
     public double getPercentage() throws IOException {
-        double percentage;
         long filePointer = accFile.getFilePointer();
-        percentage = filePointer * 100 / fileSize;
-        return percentage;
+        return filePointer * 100.0 / fileSize;
     }
 
     public void close() throws IOException {

@@ -49,7 +49,8 @@ public class Chat_Bottom extends javax.swing.JPanel {
             @Override
             public void onSuccess(String translatedMessage) {
                 System.out.println("Translation successful: " + translatedMessage); // Debug message
-                Model_Send_Message sendMessage = new Model_Send_Message(MessageType.TEXT, Service.getInstance().getUser().getUserID(), user.getUserID(), translatedMessage);
+                Model_Send_Message sendMessage = new Model_Send_Message(MessageType.TEXT, Service.getInstance().getUser().getUserID(), user.getUserID(), message);
+                sendMessage.setTranslatedText(translatedMessage);
                 PublicEvent.getInstance().getEventChat().sendMessage(sendMessage);
                 txtMessage.setText("");
             }

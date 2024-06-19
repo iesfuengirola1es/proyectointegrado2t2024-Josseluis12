@@ -6,6 +6,20 @@ import org.json.JSONObject;
 
 public class Model_Send_Message {
 
+    private MessageType messageType;
+    private int fromUserID;
+    private int toUserID;
+    private String originalText; // Cambio de 'text' a 'originalText'
+    private Model_File_Sender file;
+    private String translatedText; // Nuevo campo para el mensaje traducido
+
+    public Model_Send_Message(MessageType messageType, int fromUserID, int toUserID, String originalText) {
+        this.messageType = messageType;
+        this.fromUserID = fromUserID;
+        this.toUserID = toUserID;
+        this.originalText = originalText; // Inicialización del mensaje original
+    }
+
     public MessageType getMessageType() {
         return messageType;
     }
@@ -30,12 +44,12 @@ public class Model_Send_Message {
         this.toUserID = toUserID;
     }
 
-    public String getText() {
-        return text;
+    public String getOriginalText() {
+        return originalText;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setOriginalText(String originalText) {
+        this.originalText = originalText;
     }
 
     public Model_File_Sender getFile() {
@@ -46,21 +60,13 @@ public class Model_Send_Message {
         this.file = file;
     }
 
-    public Model_Send_Message(MessageType messageType, int fromUserID, int toUserID, String text) {
-        this.messageType = messageType;
-        this.fromUserID = fromUserID;
-        this.toUserID = toUserID;
-        this.text = text;
+    public String getTranslatedText() {
+        return translatedText;
     }
 
-    public Model_Send_Message() {
+    public void setTranslatedText(String translatedText) {
+        this.translatedText = translatedText;
     }
-
-    private MessageType messageType;
-    private int fromUserID;
-    private int toUserID;
-    private String text;
-    private Model_File_Sender file;
 
     public JSONObject toJsonObject() {
         try {
@@ -68,10 +74,12 @@ public class Model_Send_Message {
             json.put("messageType", messageType.getValue());
             json.put("fromUserID", fromUserID);
             json.put("toUserID", toUserID);
+            json.put("originalText", originalText); // Incluir el mensaje original
+            json.put("translatedText", translatedText); // Incluir el mensaje traducido
             if (messageType == MessageType.FILE || messageType == MessageType.IMAGE) {
                 json.put("text", file.getFileExtensions());
             } else {
-                json.put("text", text);
+                json.put("text", originalText); // Enviar el texto original al frontend
             }
             return json;
         } catch (JSONException e) {

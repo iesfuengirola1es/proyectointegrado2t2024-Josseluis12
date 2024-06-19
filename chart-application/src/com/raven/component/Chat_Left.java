@@ -1,8 +1,12 @@
 package com.raven.component;
 
+import com.raven.model.Model_File_Sender;
 import com.raven.model.Model_Receive_Image;
-import java.awt.Color;
-import javax.swing.Icon;
+
+import javax.swing.*;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Chat_Left extends javax.swing.JLayeredPane {
 
@@ -21,7 +25,6 @@ public class Chat_Left extends javax.swing.JLayeredPane {
     }
 
     public void setImage(Icon... image) {
-
     }
 
     public void setImage(Model_Receive_Image dataImage) {
@@ -38,7 +41,9 @@ public class Chat_Left extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        String currentTime = sdf.format(new Date());
+        txt.setTime(currentTime);
     }
 
     @SuppressWarnings("unchecked")
@@ -50,17 +55,19 @@ public class Chat_Left extends javax.swing.JLayeredPane {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.component.Chat_Item txt;
+    // End of variables declaration//GEN-END:variables
 }

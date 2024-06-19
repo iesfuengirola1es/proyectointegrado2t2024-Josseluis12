@@ -4,6 +4,9 @@ import com.raven.event.EventFileSender;
 import com.raven.service.Service;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -73,6 +76,13 @@ public class Model_File_Sender {
         this.message = message;
         fileExtensions = getExtensions(file.getName());
         fileSize = accFile.length();
+    }
+
+    public Model_File_Sender(JSONObject jsonObject) throws JSONException {
+        this.fileID = jsonObject.getInt("fileID");
+        this.fileExtensions = jsonObject.getString("fileExtensions");
+        this.fileSize = jsonObject.getLong("fileSize");
+        // Handle file deserialization if needed
     }
 
     public Model_File_Sender() {
@@ -180,5 +190,17 @@ public class Model_File_Sender {
 
     public void addEvent(EventFileSender event) {
         this.event = event;
+    }
+
+    public JSONObject toJsonObject() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("fileID", fileID);
+            json.put("fileExtensions", fileExtensions);
+            json.put("fileSize", fileSize);
+            return json;
+        } catch (JSONException e) {
+            return null;
+        }
     }
 }
